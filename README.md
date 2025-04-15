@@ -142,11 +142,11 @@ The testing plan includes **unit testing, integration testing, and user acceptan
 
 **Test Environment:**  
 
-| Test Case           | Input                             | Expected Output              | Actual Output |
-|---------------------|-----------------------------------|------------------------------|----------------|
-| Shorten URL         | `https://www.youtube.com/`    | Short URL is generated       | ✅             |
-| Redirect            | `https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/b9051d`         | Redirects to original URL    | ✅             |
-| Invalid Short URL   | `https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/xyz999`         | 404 Error                    | ✅             |
+| Test Case           | Input                                                           | Expected Output           | Actual Output |
+|---------------------|------------------------------------------------------------------|---------------------------|----------------|
+| Shorten URL         | `https://www.youtube.com/`                                       | Short URL is generated    | ✅             |
+| Redirect            | `https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/b9051d` | Redirects to original URL | ✅             |
+| Invalid Short URL   | `https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/xyz999` | 404 Error                 | ✅             |
 
 <br><br>
 
@@ -184,7 +184,7 @@ AWS CloudWatch and API Gateway logs are used for monitoring.
 
 | Component  | Location/URL |
 |------------|--------------|
-| Frontend   | [http://url-shortener-frontend-host.s3-website-us-east-1.amazonaws.com/]http://url-shortener-frontend-host.s3-website-us-east-1.amazonaws.com/) |
+| Frontend   | [http://url-shortener-frontend-host.s3-website-us-east-1.amazonaws.com/](http://url-shortener-frontend-host.s3-website-us-east-1.amazonaws.com/) |
 | API        | https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/shorten |
 | Backend    | AWS Lambda Function |
 | Database   | DynamoDB Table: `ShortURLs` |
