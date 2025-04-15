@@ -29,7 +29,8 @@ This service allows users to enter a long URL and receive a shortened version th
 This project focuses on providing URL shortening functionality as part of the overall project. It is designed for users who require a simple and efficient way to generate short URLs from long URLs, improving shareability and accessibility.
 
 ### Scope  
-This project will implement a RESTful API for URL shortening, storing mappings in a DynamoDB table, and serving shortened links via API Gateway and Lambda. The frontend will be deployed via S3 (maybe Netlify), allowing users to generate and manage shortened URLs.
+This project implements a RESTful API for URL shortening, storing mappings in a DynamoDB table, and serving shortened links via API Gateway and Lambda.  
+The frontend is deployed via **S3 Static Website Hosting**, allowing users to generate and use shortened URLs from a clean web interface.
 
 ### Requirements  
 
@@ -49,26 +50,24 @@ This project will implement a RESTful API for URL shortening, storing mappings i
 
 #### Technical Requirements  
 
-- **Backend:** AWS Lambda (Node.js/Python)  
+- **Backend:** AWS Lambda (Python)  
 - **Storage:** DynamoDB (NoSQL) for mapping short URLs to original URLs  
 - **API Management:** AWS API Gateway  
 - **Frontend:** Static website hosted on AWS S3  
 
 #### Security Requirements  
-Security measures to protect user data and prevent abuse.  
 
 - **Rate Limiting:** API shall impose rate limits to prevent spam and excessive usage.  
 - **Data Encryption:** All stored URLs shall be encrypted at rest in DynamoDB.  
 
 #### Estimates  
-Estimated breakdown of work effort for implementation.  
 
 | # | Description | Estimated Hours |  
 |---|------------|----------------|  
 | 1 | Setup AWS Lambda, API Gateway, and DynamoDB | 6 hrs |  
 | 2 | Develop URL shortening logic in Lambda | 4 hrs |  
 | 3 | Implement redirection and retrieval logic | 3 hrs |  
-| 4 | Deploy frontend via Netlify/S3 | 3 hrs |  
+| 4 | Deploy frontend via S3 | 3 hrs |  
 | 5 | Integrate custom domain & SSL | 4 hrs |  
 | 6 | Implement security measures (Rate Limiting, Encryption) | 5 hrs |  
 | **TOTAL** | | **25 hrs** |  
@@ -78,7 +77,11 @@ Estimated breakdown of work effort for implementation.
 ## Section 3 - System Architecture
 
 ### Overview  
-The system architecture consists of a serverless backend built using AWS Lambda, API Gateway, and DynamoDB, along with a static frontend hosted on S3 and Netlify. Users interact with the frontend to submit long URLs, which are processed by the backend and stored in the database. When a shortened URL is accessed, the backend retrieves and redirects the user accordingly.
+The system architecture consists of a serverless backend built using AWS Lambda, API Gateway, and DynamoDB, along with a static frontend hosted on S3.  
+Users interact with the frontend to submit long URLs, which are processed by the backend and stored in the database.  
+When a shortened URL is accessed, the backend retrieves and redirects the user accordingly.
+
+![Architecture Diagram](https://github.com/user-attachments/assets/54c69454-8b2e-489d-8059-5b54d583bb7a)
 
 <br><br>
 
@@ -86,12 +89,12 @@ The system architecture consists of a serverless backend built using AWS Lambda,
 
 Below is a description of the key database table used in this module:
 
-| Field  | Notes                                       | Type      |
-|--------|--------------------------------------------|-----------|
-| ID     | Unique Identifier for the shortened URL   | STRING    |
-| LongURL | The original URL before shortening       | STRING    |
-| ShortCode | The generated short identifier         | STRING    |
-| CreatedAt | Timestamp of when the URL was created | TIMESTAMP |
+| Field      | Notes                                      | Type      |
+|------------|--------------------------------------------|-----------|
+| ID         | Unique Identifier for the shortened URL    | STRING    |
+| LongURL    | The original URL before shortening         | STRING    |
+| ShortCode  | The generated short identifier             | STRING    |
+| CreatedAt  | Timestamp of when the URL was created      | TIMESTAMP |
 
 <br><br>
 
@@ -125,10 +128,10 @@ The UI consists of a simple page where users can enter a long URL and receive a 
 
 ### Use Cases / User Function Description  
 
-| Use Case | Description |
-|----------|------------|
-| Shorten URL | User enters a long URL, and the system provides a short link. |
-| Redirect | User accesses the short link, and the system redirects to the original URL. |
+| Use Case     | Description                                             |
+|--------------|---------------------------------------------------------|
+| Shorten URL  | User enters a long URL, and the system provides a short link. |
+| Redirect     | User accesses the short link, and the system redirects to the original URL. |
 
 <br><br>
 
@@ -139,11 +142,11 @@ The testing plan includes **unit testing, integration testing, and user acceptan
 
 **Test Environment:**  
 
-| Test Case | Input | Expected Output | Actual Output |
-|-----------|-------|----------------|--------------|
-| Shorten URL | `https://example.com/long-url` | Short URL is generated | ✅ |
-| Redirect | `https://short.ly/abc123` | Redirects to original URL | ✅ |
-| Invalid Short URL | `https://short.ly/xyz999` | 404 Error | ✅ |
+| Test Case           | Input                             | Expected Output              | Actual Output |
+|---------------------|-----------------------------------|------------------------------|----------------|
+| Shorten URL         | `https://www.youtube.com/`    | Short URL is generated       | ✅             |
+| Redirect            | `https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/b9051d`         | Redirects to original URL    | ✅             |
+| Invalid Short URL   | `https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/xyz999`         | 404 Error                    | ✅             |
 
 <br><br>
 
@@ -151,38 +154,48 @@ The testing plan includes **unit testing, integration testing, and user acceptan
 
 To ensure system health, we monitor the following metrics:  
 
-- **Performance Metrics**: Response time, API latency, server load.  
-- **Error Metrics**: Rate of failed requests, API Gateway logs.  
-- **Availability Metrics**: Uptime monitoring (99.9% target).  
-- **User Metrics**: Number of active users, usage trends.  
+- **Performance Metrics**: Response time, API latency, server load  
+- **Error Metrics**: Rate of failed requests, API Gateway logs  
+- **Availability Metrics**: Uptime monitoring (99.9% target)  
+- **User Metrics**: Number of active users, usage trends  
 
-AWS CloudWatch and API Gateway logs will be used for monitoring.  
+AWS CloudWatch and API Gateway logs are used for monitoring.  
 
 <br><br>
 
 ## Section 9 - Other Interfaces  
 
 ### External Interfaces  
-- **API Gateway**: Routes requests to Lambda functions.  
-- **DynamoDB**: Stores URL mappings.  
-- **S3**: Hosts the frontend UI.  
+- **API Gateway**: Routes requests to Lambda functions  
+- **DynamoDB**: Stores URL mappings  
+- **S3**: Hosts the frontend UI  
 
 <br><br>
 
 ## Section 10 - Extra Design Features / Outstanding Issues  
 
-- Potential **custom domain** for shortened links.  
-- **Expiration feature** for temporary shortened URLs.  
-- **Analytics dashboard** for tracking URL usage (future enhancement).  
+- Potential **custom domain** for shortened links  
+- **Expiration feature** for temporary shortened URLs  
+- **Analytics dashboard** for tracking URL usage (future enhancement)  
+
+<br><br>
+
+## Section 11 - Deployment Info  
+
+| Component  | Location/URL |
+|------------|--------------|
+| Frontend   | [http://url-shortener-frontend-host.s3-website-us-east-1.amazonaws.com/]http://url-shortener-frontend-host.s3-website-us-east-1.amazonaws.com/) |
+| API        | https://6wpltrt8ob.execute-api.us-east-1.amazonaws.com/dev/shorten |
+| Backend    | AWS Lambda Function |
+| Database   | DynamoDB Table: `ShortURLs` |
 
 <br><br>
 
 ## Section 12 - Glossary  
 
-| Term | Definition |
-|------|------------|
-| API Gateway | AWS service for managing API endpoints. |
-| Lambda | Serverless compute service for backend logic. |
-| DynamoDB | NoSQL database for storing URL mappings. |
-| Netlify | Platform for hosting frontend web applications. |
-
+| Term        | Definition                                      |
+|-------------|-------------------------------------------------|
+| API Gateway | AWS service for managing API endpoints          |
+| Lambda      | Serverless compute service for backend logic    |
+| DynamoDB    | NoSQL database for storing URL mappings         |
+| S3          | AWS service for hosting static frontend assets  |
